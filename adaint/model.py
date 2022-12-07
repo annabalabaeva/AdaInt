@@ -317,8 +317,9 @@ class AiLUT(BaseModel):
             tuple(Tensor, Tensor, Tensor):
                 Output image, LUT weights, Sampling Coordinates.
         """
+        print(imgs.size())
         # E: (b, f)
-        codes = self.backbone(imgs)
+        codes = self.backbone(imgs).mean(dim=0, keepdim=True).repeat(imgs.size(0), 1)
         # (b, m), T: (b, c, d, d, d)
         weights, luts = self.lut_generator(codes)
         # \hat{P}: (b, c, d)
@@ -329,7 +330,7 @@ class AiLUT(BaseModel):
 
         outs = ailut_transform(imgs, luts, vertices)
 
-        return outs, weights, vertices
+        return outs, luts, weights, vertices
 
     @auto_fp16(apply_to=('lq', ))
     def forward(self, lq, gt=None, test_mode=False, **kwargs):
@@ -392,13 +393,13 @@ class AiLUT(BaseModel):
         Returns:
             outputs (dict): Output results.
         """
-        output, _, _ = self.forward_dummy(lq)
+        output, luts, weights, vertices = self.forward_dummy(lq)
         if self.test_cfg is not None and self.test_cfg.get('metrics', None):
             assert gt is not None, (
                 'evaluation with metrics must have gt images.')
             results = dict(eval_result=self.evaluate(output, gt))
         else:
-            results = dict(lq=lq.cpu(), output=output.cpu())
+            results = dict(lq=lq.cpu(), output=output.cpu(), lut=luts[0:1], vertices=vertices[0:1])
             if gt is not None:
                 results['gt'] = gt.cpu()
 
