@@ -1,3 +1,4 @@
+export FORCE_CUDA="1"
 python3.7 --version
 python3.7 -m pip install -r requirements.txt
 python3.7 -m pip install -v -e .
