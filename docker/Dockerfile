@@ -10,7 +10,6 @@ RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machi
 RUN apt-get update && \
     apt-get install -y build-essential  && \
     apt-get install -y wget && \
-    apt-get install -y tmux && \
     apt-get clean
 
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata && apt-get install -y git-all
@@ -24,5 +23,9 @@ RUN python3.7 -m pip install torch==1.8.1+cu102 torchvision==0.9.1+cu102 -f http
 
 RUN python3.7 -c "import torch; print(torch.cuda.is_available())"
 
-RUN tmux new && cd /home && git clone https://github.com/annabalabaeva/AdaInt.git && cd AdaInt && git checkout pano && \
+RUN cd /home && git clone https://github.com/annabalabaeva/AdaInt.git && cd AdaInt && git checkout pano && \
     bash ./docker/setup.sh
+
+WORKDIR /home/AdaInt/
+ENTRYPOINT [ "python3.7" ]
+CMD ["-m", "server.server" ]

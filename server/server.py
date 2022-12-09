@@ -1,12 +1,8 @@
-# web-app for API image manipulation
-import shutil
-
 from flask import Flask, request, send_file, after_this_request, jsonify
 import os
 import uuid
 from shutil import rmtree
-# from PIL import Image
-from pano_utils import AdaintEngine
+from server.pano_utils import AdaintEngine
 
 app = Flask(__name__)
 
