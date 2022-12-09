@@ -31,7 +31,7 @@ def enhance(mode):
     print("File was passed to ML model.")
     enhanced_filename = adaint_engine.enhance(filename, temp_dir, mode)
     print("File was processed. Returning...")
-    
+
     @after_this_request
     def remove_file(response):
         try:
