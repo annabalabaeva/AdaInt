@@ -26,6 +26,6 @@ RUN python3.7 -c "import torch; print(torch.cuda.is_available())"
 RUN cd /home && git clone https://github.com/annabalabaeva/AdaInt.git && cd AdaInt && git checkout pano && \
     bash ./docker/setup.sh
 
-WORKDIR /home/AdaInt/
-ENTRYPOINT [ "python3.7" ]
-CMD ["-m", "server.server" ]
+WORKDIR /home/AdaInt/docker/
+ENTRYPOINT [ "bash" ]
+CMD ["start_run.sh" ]
