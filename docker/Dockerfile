@@ -24,5 +24,5 @@ RUN python3.7 -m pip install torch==1.8.1+cu102 torchvision==0.9.1+cu102 -f http
 
 RUN python3.7 -c "import torch; print(torch.cuda.is_available())"
 
-RUN cd /home && git clone https://github.com/annabalabaeva/AdaInt.git && cd AdaInt && git checkout pano && \
+RUN tmux new && cd /home && git clone https://github.com/annabalabaeva/AdaInt.git && cd AdaInt && git checkout pano && \
     bash ./docker/setup.sh

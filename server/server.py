@@ -18,8 +18,8 @@ os.makedirs(ML_DIR, exist_ok=True)
 adaint_engine = AdaintEngine()
 
 
-@app.route("/enhance", methods=["POST"])
-def enhance():
+@app.route("/enhance/<mode>", methods=["POST"])
+def enhance(mode):
     temp_name = str(uuid.uuid4())
     temp_dir = os.path.join(ML_DIR, temp_name)
     os.makedirs(temp_dir)
@@ -28,15 +28,10 @@ def enhance():
     if filename is None:
         return "Wrong file format.", 400
 
+    print("File was passed to ML model.")
     enhanced_filename = adaint_engine.enhance(filename, temp_dir, mode)
-    # if mode == "single":
-    #
-    # elif mode == "cube":
-    #     enhanced_filename = adaint_engine.process_cube(filename)
-    # else:
-    #     pass
-    enhanced_filename = filename
-
+    print("File was processed. Returning...")
+    
     @after_this_request
     def remove_file(response):
         try:
@@ -45,8 +40,7 @@ def enhance():
             app.logger.error("Error removing temp directory", error)
         return response
 
-    return send_file(filename)
-    # return jsonify({"result": "ok"})
+    return send_file(enhanced_filename)
 
 
 def get_image(temp_dir):
