@@ -10,16 +10,19 @@ RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machi
 RUN apt-get update && \
     apt-get install -y build-essential  && \
     apt-get install -y wget && \
-    apt-get install -y git && \
+    apt-get install -y tmux && \
     apt-get clean
 
+RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata && apt-get install -y git-all
+
 # Install miniconda
-ENV CONDA_DIR /opt/conda
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
-     /bin/bash ~/miniconda.sh -b -p /opt/conda
+RUN apt update && apt install -y python3-pip && apt install -y python3.7-dev && python3.7 -m pip install pip
+RUN python3.7 -m pip install pip --upgrade && gcc --version
 
-# Put conda in path so we can use conda activate
-ENV PATH=$CONDA_DIR/bin:$PATH
+RUN python3.7 -m pip install Cython
+RUN python3.7 -m pip install torch==1.8.1+cu102 torchvision==0.9.1+cu102 -f https://download.pytorch.org/whl/torch_stable.html
 
-RUN git clone https://github.com/annabalabaeva/AdaInt.git && cd AdaInt
-RUN bash docker/setup.sh
+RUN python3.7 -c "import torch; print(torch.cuda.is_available())"
+
+RUN cd /home && git clone https://github.com/annabalabaeva/AdaInt.git && cd AdaInt && git checkout pano && \
+    bash ./docker/setup.sh
