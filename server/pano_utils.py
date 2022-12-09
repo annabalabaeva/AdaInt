@@ -17,8 +17,8 @@ from ailut import ailut_transform
 
 class AdaintEngine:
     def __init__(self,
-                 config_path="../adaint/configs/fivekrgb.py",
-                 checkpoint_path="../pretrained/AiLUT-FiveK-sRGB.pth",
+                 config_path="adaint/configs/fivekrgb.py",
+                 checkpoint_path="pretrained/AiLUT-FiveK-sRGB.pth",
                  device_id=0):
         self.model = init_model(
             config_path, checkpoint_path, device=torch.device('cuda', device_id)
