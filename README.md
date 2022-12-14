@@ -1,3 +1,23 @@
+### Docker installation
+1. Build image 
+```bash
+docker build docker/ -t pano_enhance
+```
+2. Run container
+```bash
+sudo docker run -it -p 127.0.0.1:5000:5000  --gpus all pano_enhance:latest
+```
+3. Test that query can be successfully executed
+- With one LUT:
+```bash
+curl -F image=@resources/sample_pano.jpg http://127.0.0.1:5000/enhance/single --output res_sample_pano_single.jpg
+```
+- With LUT averaged by 4 horizontal faces of panorama:
+```bash
+curl -F image=@resources/sample_pano.jpg http://127.0.0.1:5000/enhance/cube --output res_sample_pano_cube.jpg
+```
+------
+
 # AdaInt: Learning Adaptive Intervals for 3D Lookup Tables on Real-time Image Enhancement
 
 ## Introduction
